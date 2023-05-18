@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import Error from '../Error/Error';
 import Loader from '../Loader/Loader';
 const category = ({ categories, status }) => {
-  console.log('categories, status: ', categories, status);
   if (status === STATUS.Error) return (<Error />)
   if (status === STATUS.LOADING) return (<Loader />)
   return (

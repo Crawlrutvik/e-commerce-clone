@@ -10,11 +10,9 @@ import SingleProduct from '../SingleProduct/SingleProduct';
 import { formatPrice } from '../../utils/helpers';
 
 const ProductList = ({ products, status }) => {
-  console.log('-----products----: ', products);
   const dispatch = useDispatch();
   const { isModalVisible } = useSelector((state) => state.modal)
   const viewModalVisible = (data) => {
-    console.log('data:productLIst ', data);
     dispatch(setModalData(data))
     dispatch(setIsModalVisible(true));
   }

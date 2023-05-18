@@ -2,18 +2,24 @@ import React, { useEffect, useState } from 'react'
 import "./Navbar.scss";
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories, setCategories } from '../../store/categorySlice';
+import { fetchCategories } from '../../store/categorySlice';
+import { getCartTotal } from '../../store/cartSlice';
 
 const Navbar = () => {
   const dispatch = useDispatch()
-  const { data } = useSelector((state) => {
+
+  const { totalItems } = useSelector((state) => state.cart)
+  console.log('totalItems: ', totalItems);
+  const { data: categories } = useSelector((state) => {
     console.log('state: ', state);
     return state.category
   })
   // console.log('data: ', data);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
   useEffect(() => {
-    dispatch(fetchCategories())
+    dispatch(fetchCategories());
+    dispatch(getCartTotal());
   }, [])
 
   return (
@@ -41,7 +47,7 @@ const Navbar = () => {
                       <i className="fas fa-shopping-cart"></i>
                     </span>
                     <div className='btn-txt fw-5'>Cart
-                      <span className='cart-count-value'>0</span>
+                      <span className='cart-count-value'>{totalItems}</span>
                     </div>
                   </Link>
                 </div>
@@ -58,7 +64,7 @@ const Navbar = () => {
                   <i className='fas fa-times'></i>
                 </button>
                 {
-                  data.map((category) => {
+                  categories.map((category) => {
                     console.log('category: ', category);
                     return (
                       <li key={category.id}><Link to={`/category/${category.id}`} className="nav-link text-white" onClick={() => setIsSidebarOpen(false)}>{category.name}</Link></li>

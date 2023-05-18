@@ -12,14 +12,11 @@ import SingleProduct from "../SingleProduct/SingleProduct"
 const SingleCategory = ({ products, status }) => {
   const dispatch = useDispatch();
   const { isModalVisible } = useSelector((state) => state.modal)
-  console.log('isModalVisible: ', isModalVisible);
   const viewModalHandle = (data) => {
-    console.log('data:single ', data);
     dispatch(setModalData(data))
     dispatch(setIsModalVisible(true))
 
   }
-  console.log('products,status: single  ', products);
   if (status === STATUS.ERROR) return (<Error />)
   if (status === STATUS.LOADING) return (<Loader />)
   return (

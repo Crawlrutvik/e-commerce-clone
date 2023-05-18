@@ -1,13 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./SingleProduct.scss";
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsModalVisible } from '../../store/modalSlice';
 import { formatPrice } from '../../utils/helpers';
+import { addToCard } from '../../store/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 const SingleProduct = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [qty, setQty] = useState(1);
   const { data: product } = useSelector((state) => state.modal)
-  console.log('product:data ', product);
+
+  const increaseQty = () => {
+    setQty((preQty) => {
+      let newQty = preQty + 1;
+      return newQty;
+    })
+  }
+  const decreaseQty = () => {
+    setQty((preQty) => {
+      let newQty = preQty - 1;
+      if (newQty < 1) {
+        newQty = 1;
+      }
+      return newQty;
+    })
+  }
+
+  const addToCartHandler = (product) => {
+    console.log('product: addToCartHandler', product);
+    let totalPrice = qty * product.price;
+    const tempProduct = {
+      ...product,
+      quantity: qty,
+      totalPrice
+    }
+    dispatch(addToCard(tempProduct));
+    dispatch(setIsModalVisible(false))
+    navigate('/cart')
+  }
   return (
     <>
       <div className='overlay-bg' >
@@ -31,16 +63,16 @@ const SingleProduct = () => {
                 <div className="qty flex">
                   <span className="text-light-blue qty-text">Qty: </span>
                   <div className="qty-change flex">
-                    <button type="button" className='qty-dec fs-14' >
+                    <button type="button" className='qty-dec fs-14' onClick={() => decreaseQty()} >
                       <i className="fas fa-minus text-light-blue"></i>
                     </button>
-                    <span className="qty-value flex flex-center"></span>
-                    <button type="button" className='qty-inc fs-14 text-light-blue'>
+                    <span className="qty-value flex flex-center">{qty}</span>
+                    <button type="button" className='qty-inc fs-14 text-light-blue' onClick={() => increaseQty()}>
                       <i className="fas fa-plus"></i>
                     </button>
                   </div>
                 </div>
-                <button type="button" className='btn-primary add-to-cart-btn' >
+                <button type="button" className='btn-primary add-to-cart-btn' onClick={() => addToCartHandler(product)} >
                   <span className="btn-icon">
                     <i className='fas fa-cart-shopping'></i>
                   </span>
